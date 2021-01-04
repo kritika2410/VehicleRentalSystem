@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -75,16 +76,11 @@ class AdminServiceTest {
 		vehicle2.setVbrand("ford");
 		vehicle2.setVNumber("mh1234");
 		vehicle2.setVType("car");
-		try
-		{
-			Mockito.when(vehicleDAO.findById(60).get()).thenReturn(vehicle2);
-			vehicle2.setVbrand("bmw");
-
-			Mockito.when(vehicleDAO.save(vehicle2)).thenReturn(vehicle2);
-			System.out.println(vehicle2.getVbrand());
+		
+		Optional<Vehicle> optional = Optional.of(vehicle2);
+			Mockito.when(vehicleDAO.findById(60)).thenReturn(optional);
 			assertThat(adminService.editVehicle(60, vehicle2)).isEqualTo(vehicle2);
-		}
-		catch(Exception e) {}
+		
 	}
 
 	/**
@@ -101,13 +97,11 @@ class AdminServiceTest {
 		vehicle4.setVNumber("mh5678");
 		vehicle4.setVbrand("eicher");
 		vehicle4.setVType("truck");
-		try
-		{
-			Mockito.when(vehicleDAO.findById(29).get()).thenReturn(vehicle4);
+	
+		Optional<Vehicle> optional = Optional.of(vehicle4);
+			Mockito.when(vehicleDAO.findById(29)).thenReturn(optional);
 			vehicleDAO.delete(vehicle4);
 			Assert.assertEquals(adminService.removeVehicle(29), true);
-		}
-		catch(Exception e) {}
 
 	}
 
@@ -122,17 +116,12 @@ class AdminServiceTest {
 		booking1.setBId(14);
 		booking1.setFromDate(new Date());
 		booking1.setToDate(new Date());
-		booking1.setStatus(0);
-		try
-		{
-			Mockito.when(bookingDAO.findById(14).get()).thenReturn(booking1);
-			booking1.setStatus(1);
-			Mockito.when(bookingDAO.save(booking1)).thenReturn(booking1);
-			System.out.println(booking1.getStatus());
+		booking1.setStatus(1);
+		Optional<Booking> optional1 = Optional.of(booking1);
+			Mockito.when(bookingDAO.findById(14)).thenReturn(optional1);
 			assertThat(adminService.confirmBooking(14)).isEqualTo(booking1);
 		}
-		catch(Exception e) {}
-	}
+		
 
 	/**
 	 * testCancelBooking()
@@ -145,15 +134,10 @@ class AdminServiceTest {
 		booking2.setFromDate(null);
 		booking2.setToDate(null);
 		booking2.setStatus(0);
-		try
-		{
-			Mockito.when(bookingDAO.findById(14).get()).thenReturn(booking2);
-			booking2.setStatus(0);
-			Mockito.when(bookingDAO.save(booking2)).thenReturn(booking2);
-			System.out.println(booking2.getStatus());
+		Optional<Booking> optional3 = Optional.of(booking2);
+			Mockito.when(bookingDAO.findById(14)).thenReturn(optional3);
 			assertThat(adminService.confirmBooking(14)).isEqualTo(booking2);
-		}
-		catch(Exception e) {}
+
 	}
 
 	/**
@@ -242,24 +226,20 @@ class AdminServiceTest {
 	/**
 	 * testRespondEnquiry()
 	 * testing if enquiry is responded.
+	 * @throws ResourceNotFoundException 
 	 */
 	@Test
-	void testRespondEnquiry() {
+	void testRespondEnquiry() throws ResourceNotFoundException {
 		Enquiry enquiry3= new Enquiry();
 		enquiry3.setEId(35);
 		enquiry3.setDetails("string");
 		enquiry3.setEmail("string");
 		enquiry3.setResponse("ok");
 
-		try
-		{
-			Mockito.when(enquiryDAO.findById(21).get()).thenReturn(enquiry3);
-			enquiry3.setResponse("working");
-			Mockito.when(enquiryDAO.save(enquiry3)).thenReturn(enquiry3);
-			System.out.println(enquiry3.getResponse());
+		Optional<Enquiry> optional4 = Optional.of(enquiry3);
+			Mockito.when(enquiryDAO.findById(21)).thenReturn(optional4);
 			assertThat(adminService.respondEnquiry(21, enquiry3)).isEqualTo(enquiry3);
-		}
-		catch(Exception e) {}
+
 	}
 }
 
